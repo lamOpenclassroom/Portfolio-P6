@@ -162,36 +162,38 @@ li:hover {
 	width: 100%;
 
 }
-/*Ajout lien mot de passe oublié*/
-#mdp{
+/*lien mdp oublié + cursor connexion*/
+#mdp-forgive{
 	text-align: center;
 	color: #000;
 }
-#contact, #log {
+#connexion, #send:hover{
+	cursor: pointer;
+}
+/*lien mdp oublié + cursor connexion*/
+#contact,#login {
 	width: 50%;
 	margin: auto;
 }
-#contact, #log > * {
+#contact,#login > * {
 	text-align: center;
-
 }
-#contact, #log h2{
+#contact h2, #login h2{
 	margin-bottom: 20px;
 }
-#contact, #log form {
+#contact form,#login form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
-
-#contact, #log input {
+#contact input,#login input {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact, #log label {
+#contact label,#login label {
 	margin: 2em 0 1em 0;
 }
 #contact textarea {
@@ -208,11 +210,6 @@ input[type="submit"]{
 	width: 180px;
 	text-align: center;
 	border-radius: 60px ;
-}
-
-#mdp-forgive{
-	text-align: center;
-	color: #000;
 }
 
 footer nav ul {
