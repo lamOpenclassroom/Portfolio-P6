@@ -72,7 +72,7 @@ function getCategoryObj(data){
     btnObj.addEventListener("click", ()=>{
     const category = new Set(data);
     category.forEach((point) => {
-            if (point.categoryId > 1) {
+            if (point.categoryId != 1) {
             category.delete(point);
             }
     });
@@ -98,7 +98,7 @@ function getCategoryHotel(data){
     btnHotel.addEventListener("click", ()=>{
     const category = new Set(data);
     category.forEach((point) => {
-            if (point.categoryId < 3) {
+            if (point.categoryId != 3) {
             category.delete(point);
             }
     });
