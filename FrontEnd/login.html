@@ -9,7 +9,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-    <script src="log.js"></script>
+    <script src="login.js" defer></script>
 </head>
 <body>
     <header>
@@ -27,11 +27,11 @@
     <main>
         <section id="login">
             <h2>Log in</h2> 
-            <form action="#" method="post">
-                <label>Email</label>
+            <form action="./index.html" method="POST" id="form">
+                <label for="email">Email</label>
                 <input type="email" name="email" id="email">
-                <label>Mot de passe</label>
-                <input type="password" name="mdp">
+                <label for="password">Mot de passe</label>
+                <input type="password" name="password" id="password"> 
                 <input type="submit" id="connexion" value="Se connecter">
                 <a href="#" id="mdp-forgive">Mot de passe oublié</a>
             </form>
