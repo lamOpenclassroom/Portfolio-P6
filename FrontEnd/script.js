@@ -1,5 +1,4 @@
 const gallery = document.querySelector(".gallery");
-console.log(gallery);
 const urlData = "http://localhost:5678/api/works";
 const urlDataCat = "http://localhost:5678/api/categories";
 
@@ -8,7 +7,7 @@ const loadData = async(url)=>{
     fetch(url)
     .then(response => response.json())
     .then(data => {
-            console.table(data);
+            galleryModal(data);
             displayData(data); 
             getCategory(data);
             getCategoryObj(data);
@@ -25,12 +24,11 @@ const displayData = (data/*,idCat=0*/)=>{
         <img src="${data[i].imageUrl}" alt="${data[i].title}" class="image">
         <figcaption class="title">${data[i].title}</figcaption>
         </figure>`);
-    }
-    /*mettre les instructions if je clic sur lélément 1 afficher les items 1 sinon tout afficher*/    
+    }   
 }
 
 //Télecharge data boutons Categorie
-const loadDataCat = async(url)=>{
+/*const loadDataCat = async(url)=>{
     fetch(url)
     .then(response => response.json())
     .then(dataCat => {
@@ -57,11 +55,11 @@ const displayDataCat = (dataCat,data)=>{
             displayData(data,idCat); 
         }); 
     }
-}
+}*/
 
 
 
-// premère méthode
+//Premère méthode
 gallery.insertAdjacentHTML("beforebegin", `<div id="btn-filtre"><button id="1" name="Tous">Tous</button> 
 <button id="2" name="Objets">Objets</button> <button id="3" name="Appartements">Appartements</button>
 <button id="4" name="Hôtels & restaurants">Hôtels & restaurants</button></div>`);
@@ -72,7 +70,7 @@ const btnTous = document.getElementById("1");
 const btnObj = document.getElementById("2");
 const btnAppart = document.getElementById("3");
 const btnHotel = document.getElementById("4");
-console.log(btnTous);
+
 function getCategory(data){
     btnTous.addEventListener("click", ()=>{
     const category = new Set(data);
@@ -125,27 +123,50 @@ function getCategoryHotel(data){
 });
 }
 
+//-----------------------------------Modale-----------------------------------------
+//Affichage du lien modifier
+const titleMesProjets = document.querySelector("#portfolio h2");
+console.log(titleMesProjets);
+titleMesProjets.insertAdjacentHTML('beforeend',`<a href="#" role="button" id="open-modal">modifier</a>`);
 
+//Affichage de la modale
+const body = document.querySelector("body");
+console.log(body);
+body.insertAdjacentHTML('afterbegin',
+`<div class="modal" id="modal" role="dialog">
+<div class="modal-content">
+    <div class="modal-close">X</div>
+    <h3>Galerie photo</h3>
+    <div class="gallery-modal"></div>
+</div>
+</div>`);
 
+function galleryModal(data){
+    const galleryMod = document.querySelector(".gallery-modal");
+    for (let i = 0; i < data.length; i++){
+        galleryMod.insertAdjacentHTML("beforeend", `<figure>
+        <img src="${data[i].imageUrl}" alt="${data[i].title}" class="image" height="140px" width="100%">
+        <figcaption class="title">éditer</figcaption>
+        </figure>`);
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-//manière la plus simple.
-/*const category = data.filter(obj => obj.categoryId == 3);
-    document.querySelector(".gallery").innerHTML = "";
-    displayData(category);
-    console.log(category);*/
-
-
-
+// Ouverture de la modale
+function getButton(){
+    const btn = document.querySelector("#open-modal");
+    console.log(btn);
+    btn.addEventListener("click", function(e){
+        e.preventDefault();
+        let modal = document.querySelector(".modal"); 
+        console.log(modal);
+        modal.classList.add("show");
+    });
+    const closeModal = document.querySelector(".modal-close") 
+    console.log(closeModal);
+    closeModal.addEventListener("click", ()=>{
+        modal.classList.remove("show");
+    })
+}getButton();
 
 
 
