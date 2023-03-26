@@ -22,25 +22,26 @@ loadData(urlData);
 
 //Affiche mes data
 const displayData = (data/*,idCat=0*/) => {
-    /*const categoryOfData = document.querySelectorAll(".image");
+    /*
+    //test
+    const categoryOfData = document.querySelectorAll(".image");
     console.log(categoryOfData.entries = ("category_1"));
-    const entreeCat = categoryOfData.entries = ("category_1")
+    //const entreeCat = categoryOfData.entries = ("category_1")
     if (idCat=1){
-        changeCat(data);
-    }
-    function changeCat(data){
-        const filterData = data.filter(obj => obj.categoryId == 1);
+        const filterData = categoryOfData.filter(obj => obj.entries == category_1);
         console.log(filterData);
-    } 
+    }
     */
+        
+
     for (index of data) {
         gallery.insertAdjacentHTML("afterbegin", `<figure>
         <img src="${index.imageUrl}" alt="${index.title}" class="image category_${index.categoryId}">
         <figcaption class="title">${index.title}</figcaption>
         </figure>`);
     }
-
 }
+
 
 /*
 //Télecharge data boutons Categorie
@@ -73,6 +74,7 @@ const displayDataCat = (dataCat,data)=>{
     }
 }
 */
+
 
 
 
@@ -205,25 +207,41 @@ function deleteImage(){
 async function alertDelete(){
 
     console.log("clic image 1");
-    let id = document.getElementById("1");
+    let id = Number (1); 
     console.log(id);
-    let idFormJson = JSON.stringify(id);
-    await fetch(`http://localhost:5678/api/works/${id}`,{
+    await fetch(`http://localhost:5678/api/works/id=${id}`,{
         method: 'DELETE',
-        body: idFormJson,
+        body: id,
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1MTg3NDkzOSwiZXhwIjoxNjUxOTYxMzM5fQ.JGN1p8YIfR-M-5eQ-Ypy6Ima5cKA4VbfL2xMr2MgHm4`
-        },
+            "Authorization": `Bearer token`
+        },/* récupérer le token lors de la connexion et le coller ici enfin faire la requête DELETE
+        ou essaye de récupérer le token directement via authorization sans le saisir complétement*/
     })
-    .then((response)=> response.json())
-    .then((json)=> console.log("la ressource est bien supprimé"));
+    .then((response)=>{
+        response.json()
+        console.log(response.status)
+})
+    .then((json)=> console.log("la ressource est bien supprimé"))
+    .catch(json => console.log("il y a erreur"));
 }
 
+/*function deleteItem(id){
+    let modalImg = document.querySelector(`.gallery-modal #${id}`);
+    modalImg = modalImg.parentElement;//AJOUTE .DELETE pour supprimer la figure complète
+    console.log(modalImg)
+}*/
 
+//pour suppr boucle sur les images (e.target.id)
 
-
+/*Lorsque la requête DELETE fonction écrire le .then
+.then((json)=> 
+    {console.log("la ressource est bien supprimé")
+    deleteItem(id);
+    })
+    .catch(error => console.log("il y a erreur"));
+*/
 
 
 
