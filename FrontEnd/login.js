@@ -15,7 +15,7 @@ function listenerConnexion() {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
-                //"Authorization": Bearer <token> ne pas oublier pour renvois et suppression des travaux.
+                //"Authorization": `Bearer ${token}`,
             },
             body: dataFormJson
         }).then(resp => {
@@ -24,8 +24,9 @@ function listenerConnexion() {
                 alert("Erreur dans l’identifiant ou le mot de passe");
             } else {
                 console.log(resp.json())
-                //console.log(JSON.parse(resp.json())) pour récupérer le token
+                //console.log(JSON.parse(resp.json())) //pour récupérer le token
                 window.location.replace("http://127.0.0.1:5500/FrontEnd/index.html");
+                
             }
         });
 

@@ -8,9 +8,10 @@ const loadData = async (url) => {
         .then(response => response.json())
         .then(data => {
             displayData(data);
+            //sessionStorage.setItem('data', JSON.stringify(data))
             console.table(data);
-            galleryModal(data);
-            deleteImage(data);
+            galleryModal(data); //function affiche ma modale
+            deleteImage(data);  //function supprime un élément de la modale
             //catégory Tous Obj Appart Hotel
             getCategory(data);
             getCategoryObj(data);
@@ -20,60 +21,77 @@ const loadData = async (url) => {
 };
 loadData(urlData);
 
+
 //Affiche mes data
 const displayData = (data/*,idCat=0*/) => {
-    /*
-    //test
-    const categoryOfData = document.querySelectorAll(".image");
-    console.log(categoryOfData.entries = ("category_1"));
-    //const entreeCat = categoryOfData.entries = ("category_1")
-    if (idCat=1){
-        const filterData = categoryOfData.filter(obj => obj.entries == category_1);
-        console.log(filterData);
-    }
-    */
-        
-
-    for (index of data) {
+    /*console.log("test")
+    
+        if (idCat > 0) {
+            console.log(item.categoryId)
+        }*/
+        for (item of data) {
         gallery.insertAdjacentHTML("afterbegin", `<figure>
-        <img src="${index.imageUrl}" alt="${index.title}" class="image category_${index.categoryId}">
-        <figcaption class="title">${index.title}</figcaption>
-        </figure>`);
-    }
+            <img src="${item.imageUrl}" alt="${item.title}" class="image" category="${item.categoryId}">
+            <figcaption class="title">${item.title}</figcaption>
+            </figure>`);
+        }
 }
 
 
+
+
+
+
+//test
+/*function deleteElement(){
+    //récupère ma liste d'images
+    let image = document.querySelectorAll("#portfolio img");
+    console.log(image);
+    //convertir ma NodeList en Array.
+    let array = [...image];
+    console.log(array)
+    document.querySelector(".gallery").innerHTML = "";
+    array.filter(thisCat => thisCat.getAttribute("category") == 1);
+    console.log(array)
+}*/
+
 /*
 //Télecharge data boutons Categorie
-const loadDataCat = async(url)=>{
+const loadDataCat = async (url) => {
     fetch(url)
-    .then(response => response.json())
-    .then(dataCat => {
+        .then(response => response.json())
+        .then(dataCat => {
             //console.table(dataCat);
             displayDataCat(dataCat);
-        });  
-    }
+        });
+}
 loadDataCat(urlDataCat);
 
 //Récup data catégorie + affiche les boutons
-const displayDataCat = (dataCat,data)=>{
-    for (let item of dataCat){
+const displayDataCat = (dataCat) => {
+    
+    for (let item of dataCat) {
         let btn = `<button id="${item.id}" name="${item.name}">${item.name}</button>`;
         gallery.insertAdjacentHTML("beforebegin", btn);
     }
     const buttons = document.querySelectorAll("#portfolio button");
     console.log(buttons);
-    for (let button of buttons){
-        button.addEventListener("click", (e)=>{
-            console.log(e.target);
+    for (let button of buttons) {
+        button.addEventListener("click", (e) => {
+            //console.log(e.target);
             const bt = e.target;
-            const idCat = bt.getAttribute("id");
+            let idCat = bt.getAttribute("id");
+            idCat = Number(idCat);
             console.log(idCat);
-            displayData(data,idCat);
-        }); 
+            let getData = sessionStorage.getItem(JSON.parse('data'));
+            console.log(getData);
+            //console.log(data);
+            displayData(getData, idCat);
+        });
     }
 }
 */
+
 
 
 
@@ -169,12 +187,12 @@ const galleryModal = (data) => {
         <div class="icon"><i class="fa-solid fa-trash-can"></i></div></figure>`);
     }
     galleryMod.insertAdjacentHTML('afterend', `<input type="submit" id="add" value="Ajouter une photo"></input>
-    <a href="#" role="button" id="delete">supprimer la galerie</a>`);  
+    <a href="#" role="button" id="delete">supprimer la galerie</a>`);
 }
 
 
 // Ouverture de la modale
-function getButton() {
+function getButton() { //change le nom de la fonction plus parlant (buttonModalHandler), garde le même shéma ES6
     const btn = document.querySelector("#open-modal");
     console.log(btn);
     btn.addEventListener("click", function (e) {
@@ -190,41 +208,46 @@ function getButton() {
         modal.classList.remove("show");
     })
     //fermeture uniquement autour de la modale
-    modal.addEventListener("click", ()=>{
+    modal.addEventListener("click", () => {
         modal.classList.remove("show");
     })
-    modal.children[0].addEventListener("click",(e)=>{
+    modal.children[0].addEventListener("click", (e) => {
         e.stopPropagation();
     })
 } getButton();
 
 //--------------------------------------Supprimer des éléments du DOM------------------
 
-function deleteImage(){
-    document.getElementById("1").addEventListener("click",alertDelete);
+function deleteImage() {
+    document.getElementById("1").addEventListener("click", alertDelete);
 }
 
-async function alertDelete(){
-
+async function alertDelete() {
     console.log("clic image 1");
-    let id = Number (1); 
+    let id = Number (1);
     console.log(id);
-    await fetch(`http://localhost:5678/api/works/id=${id}`,{
+    //On stock le token dans le localStorage
+    localStorage.setItem("token","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MDEwMTk3MSwiZXhwIjoxNjgwMTg4MzcxfQ.xoF9rsCjSTJ-CkKqP28Okn9eLhUbLgsSBNqFBiPl9pk");
+    //On récupère le token dans le localStorage
+    let token = localStorage.getItem("token");
+    console.log(token)
+    //let tokens = JSON.stringify(token);
+    //console.log(tokens)
+    await fetch(`http://localhost:5678/api/works/${id}`, {
         method: 'DELETE',
         body: id,
         headers: {
+            "Authorization": `Bearer ${token}`,
             "Accept": "application/json",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer token`
-        },/* récupérer le token lors de la connexion et le coller ici enfin faire la requête DELETE
-        ou essaye de récupérer le token directement via authorization sans le saisir complétement*/
+            //"Content-Type": "application/json",
+        },
     })
-    .then((response)=>{
-        response.json()
-        console.log(response.status)
-})
-    .then((json)=> console.log("la ressource est bien supprimé"))
-    .catch(json => console.log("il y a erreur"));
+        .then((response) => {
+            response.json()
+            console.log(response.status)
+        })
+        .then((json) => console.log("la ressource est bien supprimé"))
+        .catch((json) => console.log("il y a erreur"));
 }
 
 /*function deleteItem(id){
