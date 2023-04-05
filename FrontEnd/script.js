@@ -8,54 +8,35 @@ const loadData = async (url) => {
         .then(response => response.json())
         .then(data => {
             displayData(data);
-            //sessionStorage.setItem('data', JSON.stringify(data))
-            console.table(data);
+            console.log(data)
+            sessionStorage.setItem('data', JSON.stringify(data))
             galleryModal(data); //function affiche ma modale
             deleteImage(data);  //function supprime un élément de la modale
-            //catégory Tous Obj Appart Hotel
+            clicAddImg(data); //function rajoute une image
+            /*//catégory Tous Obj Appart Hotel
             getCategory(data);
             getCategoryObj(data);
             getCategoryAppart(data);
-            getCategoryHotel(data);
+            getCategoryHotel(data);*/
         })
 };
 loadData(urlData);
 
 
 //Affiche mes data
-const displayData = (data/*,idCat=0*/) => {
-    /*console.log("test")
-    
-        if (idCat > 0) {
-            console.log(item.categoryId)
-        }*/
-        for (item of data) {
-        gallery.insertAdjacentHTML("afterbegin", `<figure>
-            <img src="${item.imageUrl}" alt="${item.title}" class="image" category="${item.categoryId}">
+const displayData = (data, idCat = 0) => {
+    document.querySelector(".gallery").innerHTML = "";
+    for (item of data) {
+        if (item.categoryId == idCat) {
+            gallery.insertAdjacentHTML("afterbegin", `<figure>
+            <img src="${item.imageUrl}" alt="${item.title}" class="image">
             <figcaption class="title">${item.title}</figcaption>
             </figure>`);
         }
+    }
 }
 
 
-
-
-
-
-//test
-/*function deleteElement(){
-    //récupère ma liste d'images
-    let image = document.querySelectorAll("#portfolio img");
-    console.log(image);
-    //convertir ma NodeList en Array.
-    let array = [...image];
-    console.log(array)
-    document.querySelector(".gallery").innerHTML = "";
-    array.filter(thisCat => thisCat.getAttribute("category") == 1);
-    console.log(array)
-}*/
-
-/*
 //Télecharge data boutons Categorie
 const loadDataCat = async (url) => {
     fetch(url)
@@ -66,13 +47,14 @@ const loadDataCat = async (url) => {
         });
 }
 loadDataCat(urlDataCat);
-
 //Récup data catégorie + affiche les boutons
 const displayDataCat = (dataCat) => {
-    
+    gallery.insertAdjacentHTML("beforebegin", `<div class="btn-filtre"></div>`);
+    const btnFiltre = document.querySelector(".btn-filtre");
+    btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`)
     for (let item of dataCat) {
         let btn = `<button id="${item.id}" name="${item.name}">${item.name}</button>`;
-        gallery.insertAdjacentHTML("beforebegin", btn);
+        btnFiltre.insertAdjacentHTML("beforeend", btn);
     }
     const buttons = document.querySelectorAll("#portfolio button");
     console.log(buttons);
@@ -82,29 +64,31 @@ const displayDataCat = (dataCat) => {
             const bt = e.target;
             let idCat = bt.getAttribute("id");
             idCat = Number(idCat);
-            console.log(idCat);
-            let getData = sessionStorage.getItem(JSON.parse('data'));
-            console.log(getData);
+            //console.log(idCat);
+            //let getData = sessionStorage.getItem(JSON.parse('data'));
+            const getData = JSON.parse(sessionStorage.getItem('data'));
+            //console.log(getData);
             //console.log(data);
             displayData(getData, idCat);
         });
     }
 }
-*/
+
+
+//const btnTous = document.querySelector("#tous");
+//console.log(btnTous);
 
 
 
-
-
-
+/*
 //Premère méthode
-gallery.insertAdjacentHTML("beforebegin", `<div id="btn-filtre"><button id="1" name="Tous">Tous</button> 
+gallery.insertAdjacentHTML("beforebegin", `<div id="btn-filtre"> 
 <button id="2" name="Objets">Objets</button> <button id="3" name="Appartements">Appartements</button>
 <button id="4" name="Hôtels & restaurants">Hôtels & restaurants</button></div>`);
 
 
 //Filtre des images
-const btnTous = document.getElementById("1");
+
 const btnObj = document.getElementById("2");
 const btnAppart = document.getElementById("3");
 const btnHotel = document.getElementById("4");
@@ -160,21 +144,23 @@ function getCategoryHotel(data) {
         displayData([...category]);
     });
 }
-
-//-----------------------------------Modale-----------------------------------------
+*/
+//----------------------------------Modale--------------------------------------------------------------------
 //Affichage du lien modifier
 const titleMesProjets = document.querySelector("#portfolio h2");
 console.log(titleMesProjets);
 titleMesProjets.insertAdjacentHTML('beforeend', `<a href="#" role="button" id="open-modal">modifier</a>`);
 
-//Affichage de la modale
+//--------------------------------------Affichage de la modale--------------------------------------------------
 const body = document.querySelector("body");
 body.insertAdjacentHTML('afterbegin',
     `<div class="modal" id="modal" role="dialog">
-<div class="modal-content">
+<div class="modal-content affiche-bloc">
     <div class="modal-close">X</div>
     <h3>Galerie photo</h3>
     <div class="gallery-modal"></div>
+    <input type="submit" id="add" value="Ajouter une photo"></input>
+    <a href="#" role="button" id="delete">supprimer la galerie</a>
 </div>
 </div>`);
 
@@ -186,27 +172,57 @@ const galleryModal = (data) => {
         <figcaption class="title">éditer</figcaption>
         <div class="icon"><i class="fa-solid fa-trash-can"></i></div></figure>`);
     }
-    galleryMod.insertAdjacentHTML('afterend', `<input type="submit" id="add" value="Ajouter une photo"></input>
-    <a href="#" role="button" id="delete">supprimer la galerie</a>`);
 }
 
+//-------------------------------------Affichage fenêtre ajout photo--------------------------------------------------
 
-// Ouverture de la modale
-function getButton() { //change le nom de la fonction plus parlant (buttonModalHandler), garde le même shéma ES6
+const formAddImag = document.querySelector("#modal");
+console.log(formAddImag)
+formAddImag.insertAdjacentHTML('beforeend',
+    `<div id="add-img">
+<i class="fa-regular fa-arrow-left"></i>
+<div class="add-img_close">X</div>
+<h3>Ajout photo</h3>
+
+<form action="#" class="formAddPhoto">
+    <div class="img">
+        <label for="file" class="file"> + Ajouter photo</label>
+        <input accept="/Backend/images" type="file" name="file" id="file">
+        <p>jpg, png : 4mo max</p>
+    </div>
+	<label for="title">Titre</label>
+	<input type="text" name="title" id="title">
+	<label for="category">Catégorie</label>
+	<select type="number" name="category" id="category">
+    <option value="">Choose a category</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    </select>
+    <input type="submit" id="addPhoto" value="Valider">
+</form>
+        
+</div>`);
+
+//------------------------------------------Ouverture de la modale----------------------------------------------------
+function buttonModalHandler() {
     const btn = document.querySelector("#open-modal");
     console.log(btn);
+    const contentModal = document.querySelector(".modal-content")
+    console.log(contentModal)
     btn.addEventListener("click", function (e) {
         e.preventDefault();
         let modal = document.querySelector(".modal");
-        console.log(modal);
         modal.classList.add("show");
     });
+
     //fermeture de la modale
     const closeModal = document.querySelector(".modal-close")
     console.log(closeModal);
     closeModal.addEventListener("click", () => {
         modal.classList.remove("show");
     })
+
     //fermeture uniquement autour de la modale
     modal.addEventListener("click", () => {
         modal.classList.remove("show");
@@ -214,59 +230,95 @@ function getButton() { //change le nom de la fonction plus parlant (buttonModalH
     modal.children[0].addEventListener("click", (e) => {
         e.stopPropagation();
     })
-} getButton();
+
+    //fermeture de la fenêtre add img uniquement
+    const closeAddImg = document.querySelector(".add-img_close");
+    closeAddImg.addEventListener("click", () => {
+        contentModal.classList.add("affiche-bloc")
+    })
+    //fleche gauche retour en arrière
+    const arrowLeft = document.querySelector(".fa-regular");
+    console.log(arrowLeft);
+    arrowLeft.addEventListener("click", () => {
+        contentModal.classList.add("affiche-bloc")
+    })
+
+
+
+    //Ouverture fenêtre ajout photo
+    const openWindowAddImg = document.querySelector("#add")
+    console.log(openWindowAddImg);
+    openWindowAddImg.addEventListener("click", () => {
+        contentModal.classList.remove("affiche-bloc")
+        modal.children[1].addEventListener("click", (e) => {
+            e.stopPropagation();
+        })
+    })
+} buttonModalHandler();
 
 //--------------------------------------Supprimer des éléments du DOM------------------
 
 function deleteImage() {
-    document.getElementById("1").addEventListener("click", alertDelete);
+    document.getElementById("3").addEventListener("click", alertDelete);
 }
 
 async function alertDelete() {
-    console.log("clic image 1");
-    let id = Number (1);
+    let id = Number(3);
     console.log(id);
+    console.log("clic image 3");
     //On stock le token dans le localStorage
-    localStorage.setItem("token","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MDEwMTk3MSwiZXhwIjoxNjgwMTg4MzcxfQ.xoF9rsCjSTJ-CkKqP28Okn9eLhUbLgsSBNqFBiPl9pk");
+    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MDcwNTcyMiwiZXhwIjoxNjgwNzkyMTIyfQ.rykezx1DVJXodfAmUVKQ16b0kLNO5MY_4qANJ3UNSUg");
     //On récupère le token dans le localStorage
     let token = localStorage.getItem("token");
-    console.log(token)
+    //console.log(token)
     //let tokens = JSON.stringify(token);
-    //console.log(tokens)
+
     await fetch(`http://localhost:5678/api/works/${id}`, {
         method: 'DELETE',
         body: id,
         headers: {
             "Authorization": `Bearer ${token}`,
             "Accept": "application/json",
-            //"Content-Type": "application/json",
         },
     })
-        .then((response) => {
-            response.json()
-            console.log(response.status)
+        .then((res) => {
+            res.json()
+            console.log(res.status)
         })
         .then((json) => console.log("la ressource est bien supprimé"))
-        .catch((json) => console.log("il y a erreur"));
+        .catch((json) => console.log("il y a erreur"))
+
 }
 
-/*function deleteItem(id){
-    let modalImg = document.querySelector(`.gallery-modal #${id}`);
-    modalImg = modalImg.parentElement;//AJOUTE .DELETE pour supprimer la figure complète
-    console.log(modalImg)
-}*/
+//-------------------------------------Ajout des élément du DOM-------------------------
 
-//pour suppr boucle sur les images (e.target.id)
-
-/*Lorsque la requête DELETE fonction écrire le .then
-.then((json)=> 
-    {console.log("la ressource est bien supprimé")
-    deleteItem(id);
-    })
-    .catch(error => console.log("il y a erreur"));
-*/
-
-
-
+function clicAddImg() {
+    document.querySelector(".formAddPhoto").addEventListener("submit", (e) => {
+        e.preventDefault();
+        let token = localStorage.getItem("token");
+        console.log(token)
+        const data = {
+            "id" : 12,
+            "title" : e.target.querySelector("[name=title]").value,
+            "imageUrl" : e.target.querySelector("[name=file]").value,
+            "categoryId" : e.target.querySelector("[name=category]").value,
+            "userId": 1
+        }
+        console.log(data);
+        
+        fetch("http://localhost:5678/api/works",{
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+            },
+            body: JSON.stringify(data),
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        //.then(data => console.log(data))
+    }
+)}
 
 

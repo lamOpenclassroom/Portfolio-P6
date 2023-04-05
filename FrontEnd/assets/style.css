@@ -3,19 +3,87 @@
    License: none (public domain)
 */
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -23,46 +91,68 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
 	display: block;
 }
+
 body {
 	line-height: 1;
 }
-ol, ul {
+
+ol,
+ul {
 	list-style: none;
 }
-blockquote, q {
+
+blockquote,
+q {
 	quotes: none;
 }
-blockquote:before, blockquote:after,
-q:before, q:after {
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
 	content: '';
 	content: none;
 }
+
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
 /** end reset css**/
 body {
 	max-width: 1140px;
-	margin:auto;
-	font-family: 'Work Sans' ;
+	margin: auto;
+	font-family: 'Work Sans';
 	font-size: 14px;
 }
+
 header {
 	display: flex;
 	justify-content: space-between;
 	margin: 50px 0
 }
+
 section {
 	margin: 50px 0
 }
 
-h1{
+h1 {
 	display: flex;
 	flex-direction: column;
 	font-family: 'Syne';
@@ -71,25 +161,27 @@ h1{
 	color: #B1663C
 }
 
-h1 > span {
+h1>span {
 	font-family: 'Work Sans';
-	font-size:10px;
+	font-size: 10px;
 	letter-spacing: 0.1em;
-;
+	;
 }
 
-h2{
+h2 {
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
 	color: #1D6154
 }
+
 nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
 
 }
+
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
@@ -98,13 +190,16 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
 #introduction {
 	display: flex;
 	align-items: center;
 }
+
 #introduction figure {
 	flex: 1
 }
+
 #introduction img {
 	display: block;
 	margin: auto;
@@ -114,6 +209,7 @@ li:hover {
 #introduction article {
 	flex: 1
 }
+
 #introduction h2 {
 	margin-bottom: 1em;
 }
@@ -121,21 +217,22 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
+
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
 }
 
 /*Ajout des boutons filtres*/
-#btn-filtre{
+.btn-filtre {
 	display: flex;
 	flex-direction: row;
-    justify-content: center;
+	justify-content: center;
 	margin-bottom: 10px;
 }
 
-#btn-filtre button{
-	color:#1D6154;
+.btn-filtre button {
+	color: #1D6154;
 	border-radius: 60px;
 	border: 1px solid #1D6154;
 	border-color: #1D6154;
@@ -144,7 +241,8 @@ li:hover {
 	margin-right: 10px;
 	font-weight: 700;
 }
-#btn-filtre button:hover{
+
+.btn-filtre button:hover {
 	cursor: pointer;
 	background-color: #1D6154;
 	color: #fff;
@@ -162,54 +260,75 @@ li:hover {
 	width: 100%;
 
 }
+
 /*lien mdp oublié + cursor connexion*/
-#mdp-forgive{
+#mdp-forgive {
 	text-align: center;
 	color: #000;
 }
-#connexion, #send:hover{
+
+#connexion,
+#send:hover {
 	cursor: pointer;
 }
+
 /*lien mdp oublié + cursor connexion*/
-#contact,#login {
+#contact,
+#login,
+#add-img form {
 	width: 50%;
 	margin: auto;
 }
-#contact,#login > * {
+
+#contact,
+#login>* {
 	text-align: center;
 }
-#contact h2, #login h2{
+
+#contact h2,
+#login h2 {
 	margin-bottom: 20px;
 }
-#contact form,#login form {
+
+#contact form,
+#login form,
+#add-img form {
 	text-align: left;
-	margin-top:30px;
+	margin-top: 30px;
 	display: flex;
 	flex-direction: column;
 }
-#contact input,#login input {
+
+#contact input,
+#login input,
+#add-img input,
+#add-img select {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact label,#login label {
+
+#contact label,
+#login label,
+#add-img label {
 	margin: 2em 0 1em 0;
 }
+
 #contact textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type="submit"]{
+input[type="submit"] {
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
 	background-color: #1D6154;
-	margin : 2em auto ;
+	margin: 2em auto;
 	width: 180px;
 	text-align: center;
-	border-radius: 60px ;
+	border-radius: 60px;
 }
 
 footer nav ul {
@@ -220,89 +339,164 @@ footer nav ul {
 
 /*------------------------------CSS MODALE------------------------------*/
 
-#open-modal{
+#open-modal {
 	font-weight: bold;
 	color: black;
 	text-decoration: none;
 	font-size: 1rem;
 	margin-left: 10px;
 }
-.modal{
+
+.modal {
 	background-color: rgba(0, 0, 0, 0.3);
-    position: fixed;
+	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
 	z-index: 1;
-	display: flex;
 	visibility: hidden;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
 }
-.modal-content{
+
+.modal-content,
+#add-img {
 	background-color: #fff;
 	max-width: 630px;
 	margin: auto;
 	position: relative;
 	padding-bottom: 50px;
 	display: flex;
-    flex-direction: column;
-    align-items: center;
+	flex-direction: column;
+	align-items: center;
 }
 
-.modal-content h3{
-    margin-top: 60px;
+.modal-content h3,
+#add-img h3 {
+	margin-top: 60px;
 	font-size: 1.62rem;
 }
 
-.modal-close{
+.modal-close,
+.add-img_close {
 	position: absolute;
 	top: 10px;
 	right: 10px;
 	cursor: pointer;
 }
 
-.show{
+.show {
 	visibility: visible;
 }
 
-.gallery-modal{
+.gallery-modal {
 	margin: 0 80px;
 	padding-bottom: 50px;
-    display: flex;
-    flex-wrap: wrap;
+	display: flex;
+	flex-wrap: wrap;
 	justify-content: flex-start;
 	border-bottom: 2px solid #B3B3B3;
 }
 
-.gallery-modal figure{
-	padding: 0 7px 11px 0 ;
+.gallery-modal figure {
+	padding: 0 7px 11px 0;
 }
 
-.modal-content h3{
+.modal-content h3,
+#add-img h3 {
 	margin-bottom: 46px;
 }
 
-#add{
+#add {
 	cursor: pointer;
 	padding: 10px;
 	width: 237px;
 }
 
-#delete{
-    color: #D65353;
-    text-decoration: none;
+#delete {
+	color: #D65353;
+	text-decoration: none;
 }
 
-figure{
+figure {
 	position: relative;
 }
 
-.icon{
+.icon {
 	position: absolute;
 	top: 5px;
 	right: 12px;
 	padding: 5px;
 	background-color: #000;
 	color: #fff;
+	cursor: pointer;
+}
+
+/*Formulaire d'ajout image*/
+#add-img form {
+	border-bottom: 2px solid #B3B3B3;
+	padding-bottom: 47px;
+}
+
+#add-img #add {
+	background: #A7A7A7;
+	;
+}
+
+#add-img form {
+	width: 100%;
+}
+
+#add-img {
+	padding: 70px 110px;
+	position: absolute;
+}
+
+/*upload image*/
+.img {
+	width: 420px;
+	height: 169px;
+	background-color: #E8F1F7;
+	border-radius: 3px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	justify-content: flex-end;
+}
+
+.fa-regular {
+	position: absolute;
+	left: 10px;
+	top: 10px;
+}
+
+.affiche-bloc {
+	z-index: 2;
+}
+
+#file {
+	visibility: hidden;
+	display: none;
+}
+
+.file {
+	border: 1px black solid;
+	border-radius: 15px;
+	padding: 10px;
+	background-color: #CBD6DC;
+	font-weight: 500;
+	color: #306685;
+}
+
+.img p {
+	margin-bottom: 20px;
+}
+
+#addPhoto{
 	cursor: pointer;
 }
