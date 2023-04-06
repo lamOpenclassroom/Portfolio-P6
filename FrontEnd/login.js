@@ -15,7 +15,6 @@ function listenerConnexion() {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
-                //"Authorization": `Bearer ${token}`,
             },
             body: dataFormJson
         }).then(resp => {

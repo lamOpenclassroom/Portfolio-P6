@@ -184,10 +184,10 @@ formAddImag.insertAdjacentHTML('beforeend',
 <div class="add-img_close">X</div>
 <h3>Ajout photo</h3>
 
-<form action="#" class="formAddPhoto">
+<form class="formAddPhoto">
     <div class="img">
         <label for="file" class="file"> + Ajouter photo</label>
-        <input accept="/Backend/images" type="file" name="file" id="file">
+        <input accept=".png" type="file" name="file" id="file">
         <p>jpg, png : 4mo max</p>
     </div>
 	<label for="title">Titre</label>
@@ -262,7 +262,8 @@ function deleteImage() {
     document.getElementById("3").addEventListener("click", alertDelete);
 }
 
-async function alertDelete() {
+async function alertDelete(e) {
+    e.preventDefault();
     let id = Number(3);
     console.log(id);
     console.log("clic image 3");
@@ -293,32 +294,42 @@ async function alertDelete() {
 //-------------------------------------Ajout des élément du DOM-------------------------
 
 function clicAddImg() {
-    document.querySelector(".formAddPhoto").addEventListener("submit", (e) => {
+    document.querySelector(".formAddPhoto").addEventListener("submit", async (e) => {
         e.preventDefault();
         let token = localStorage.getItem("token");
-        console.log(token)
-        const data = {
-            "id" : 12,
-            "title" : e.target.querySelector("[name=title]").value,
-            "imageUrl" : e.target.querySelector("[name=file]").value,
-            "categoryId" : e.target.querySelector("[name=category]").value,
-            "userId": 1
+        console.log(token);
+        const userFile = document.getElementById("file").files[0];
+        const userTitle = document.getElementById("title").value;
+        const userCategory = document.getElementById("category").value;
+        console.log(userFile,userTitle,userCategory)
+        if (userFile == '' || userTitle == '' || userCategory == ''){
+            alert("Veuillez rempli les champs")
         }
-        console.log(data);
+
+        const formData = new FormData();
+        formData.append("image",userFile);
+        formData.append("title",userTitle);
+        formData.append("category",userCategory);
+        console.log(formData);
         
-        fetch("http://localhost:5678/api/works",{
+        await fetch("http://localhost:5678/api/works",{
             method: "POST",
             headers: {
-                "Accept": "application/json",
+               // "Accept": "application/json",
                 "Authorization": `Bearer ${token}`,
-                "Content-Type": "multipart/form-data",
+               // "Content-Type": "multipart/form-data",
             },
-            body: JSON.stringify(data),
+            body: formData,
         })
-        .then(res => res.json())
-        .then(data => console.log(data))
-        //.then(data => console.log(data))
-    }
-)}
+        .then(resp => {console.table(resp)
+        if (resp.ok == false) {
+            alert("la requête est en erreur");
+        } else {
+            console.log(resp.json())
+            alert("le formulaire est correctement envoyé")
+        }
+        })
+})
+}
 
 
