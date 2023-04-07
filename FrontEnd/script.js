@@ -1,4 +1,6 @@
 const gallery = document.querySelector(".gallery");
+gallery.insertAdjacentHTML("beforebegin", `<div class="btn-filtre"></div>`);
+const btnFiltre = document.querySelector(".btn-filtre");
 const urlData = "http://localhost:5678/api/works";
 const urlDataCat = "http://localhost:5678/api/categories";
 
@@ -8,6 +10,7 @@ const loadData = async (url) => {
         .then(response => response.json())
         .then(data => {
             displayData(data);
+            boucleFor(data);
             console.log(data)
             sessionStorage.setItem('data', JSON.stringify(data))
             galleryModal(data); //function affiche ma modale
@@ -22,6 +25,25 @@ const loadData = async (url) => {
 };
 loadData(urlData);
 
+let boucleFor = (data) => {
+    
+    btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`)
+    const btnTous = document.querySelector("#tous");
+    console.log(btnTous)
+    btnTous.addEventListener("click",()=>{
+       // document.querySelector(".gallery").innerHTML = "";
+        let result = data.filter(allData => allData.categoryId > 1);
+        return result;
+    });
+    for (item of data){
+    gallery.insertAdjacentHTML("afterbegin", `<figure>
+    <img src="${item.imageUrl}" alt="${item.title}" class="image">
+    <figcaption class="title">${item.title}</figcaption>
+    </figure>`);
+    }
+    
+    
+}
 
 //Affiche mes data
 const displayData = (data, idCat = 0) => {
@@ -37,6 +59,7 @@ const displayData = (data, idCat = 0) => {
 }
 
 
+
 //Télecharge data boutons Categorie
 const loadDataCat = async (url) => {
     fetch(url)
@@ -49,13 +72,11 @@ const loadDataCat = async (url) => {
 loadDataCat(urlDataCat);
 //Récup data catégorie + affiche les boutons
 const displayDataCat = (dataCat) => {
-    gallery.insertAdjacentHTML("beforebegin", `<div class="btn-filtre"></div>`);
-    const btnFiltre = document.querySelector(".btn-filtre");
-    btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`)
     for (let item of dataCat) {
         let btn = `<button id="${item.id}" name="${item.name}">${item.name}</button>`;
         btnFiltre.insertAdjacentHTML("beforeend", btn);
     }
+    
     const buttons = document.querySelectorAll("#portfolio button");
     console.log(buttons);
     for (let button of buttons) {
@@ -303,7 +324,7 @@ function clicAddImg() {
         const userCategory = document.getElementById("category").value;
         console.log(userFile,userTitle,userCategory)
         if (userFile == '' || userTitle == '' || userCategory == ''){
-            alert("Veuillez rempli les champs")
+            alert("Veuillez remplir tout les champs")
         }
 
         const formData = new FormData();
@@ -323,7 +344,7 @@ function clicAddImg() {
         })
         .then(resp => {console.table(resp)
         if (resp.ok == false) {
-            alert("la requête est en erreur");
+            console.log("la requête est en erreur");
         } else {
             console.log(resp.json())
             alert("le formulaire est correctement envoyé")
