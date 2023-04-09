@@ -3,7 +3,8 @@ gallery.insertAdjacentHTML("beforebegin", `<div class="btn-filtre"></div>`);
 const btnFiltre = document.querySelector(".btn-filtre");
 const urlData = "http://localhost:5678/api/works";
 const urlDataCat = "http://localhost:5678/api/categories";
-
+btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`)
+const btnTous = document.querySelector("#tous");
 //télécharger mes data du serveur
 const loadData = async (url) => {
     fetch(url)
@@ -25,29 +26,23 @@ const loadData = async (url) => {
 };
 loadData(urlData);
 
-let boucleFor = (data) => {
-    
-    btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`)
-    const btnTous = document.querySelector("#tous");
-    console.log(btnTous)
-    btnTous.addEventListener("click",()=>{
-       // document.querySelector(".gallery").innerHTML = "";
-        let result = data.filter(allData => allData.categoryId > 1);
-        return result;
-    });
+let boucleFor = (data) => {  
     for (item of data){
-    gallery.insertAdjacentHTML("afterbegin", `<figure>
-    <img src="${item.imageUrl}" alt="${item.title}" class="image">
-    <figcaption class="title">${item.title}</figcaption>
-    </figure>`);
-    }
-    
-    
+        gallery.insertAdjacentHTML("afterbegin", `<figure>
+        <img src="${item.imageUrl}" alt="${item.title}" class="image">
+        <figcaption class="title">${item.title}</figcaption>
+        </figure>`); 
+    } 
 }
 
 //Affiche mes data
 const displayData = (data, idCat = 0) => {
     document.querySelector(".gallery").innerHTML = "";
+    btnTous.addEventListener("click",()=>{
+        document.querySelector(".gallery").innerHTML = "";
+        boucleFor(data);
+    })
+    
     for (item of data) {
         if (item.categoryId == idCat) {
             gallery.insertAdjacentHTML("afterbegin", `<figure>
@@ -57,7 +52,6 @@ const displayData = (data, idCat = 0) => {
         }
     }
 }
-
 
 
 //Télecharge data boutons Categorie
@@ -289,7 +283,7 @@ async function alertDelete(e) {
     console.log(id);
     console.log("clic image 3");
     //On stock le token dans le localStorage
-    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MDcwNTcyMiwiZXhwIjoxNjgwNzkyMTIyfQ.rykezx1DVJXodfAmUVKQ16b0kLNO5MY_4qANJ3UNSUg");
+    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MDg4OTI0MiwiZXhwIjoxNjgwOTc1NjQyfQ.lQdwW4fT-xC5OfSeZ9rJ3L0y0Ckf2SKINqkMW6hAEO0");
     //On récupère le token dans le localStorage
     let token = localStorage.getItem("token");
     //console.log(token)
