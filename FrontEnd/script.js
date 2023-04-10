@@ -84,7 +84,9 @@ const body = document.querySelector("body");
 body.insertAdjacentHTML('afterbegin',
     `<div class="modal" id="modal" role="dialog">
 <div class="modal-content affiche-bloc">
-    <div class="modal-close">X</div>
+    <div class="modal-close">
+    <i class="fa-solid fa-xmark"></i>
+    </div>
     <h3>Galerie photo</h3>
     <div class="gallery-modal"></div>
     <input type="submit" id="add" value="Ajouter une photo"></input>
@@ -107,13 +109,16 @@ function galleryModal (data){
 const formAddImag = document.querySelector("#modal");
 formAddImag.insertAdjacentHTML('beforeend',
     `<div id="add-img">
-<i class="fa-regular fa-arrow-left"></i>
-<div class="add-img_close">X</div>
+<i class="fa-solid fa-arrow-left"></i>
+<div class="add-img_close">
+<i class="fa-solid fa-xmark"></i>
+</div>
 <h3>Ajout photo</h3>
 
 <form class="formAddPhoto">
     <div class="img">
-        <label for="file" class="file"> + Ajouter photo</label>
+        <i class="fa-sharp fa-regular fa-image fa-4x" ></i>
+        <label for="file" class="file" id="ajout-photo"> + Ajouter photo</label>
         <input accept=".png" type="file" name="file" id="file">
         <p>jpg, png : 4mo max</p>
     </div>
@@ -161,7 +166,7 @@ function buttonModalHandler() {
         contentModal.classList.add("affiche-bloc")
     })
     //fleche gauche retour en arrière
-    const arrowLeft = document.querySelector(".fa-regular");
+    const arrowLeft = document.querySelector(".fa-arrow-left");
     arrowLeft.addEventListener("click", () => {
         contentModal.classList.add("affiche-bloc")
     })
@@ -225,7 +230,7 @@ function clicAddImg() {
         const userFile = document.getElementById("file").files[0];
         const userTitle = document.getElementById("title").value;
         const userCategory = document.getElementById("category").value;
-
+        //quand je submit le formulaire il faut l'afficher dans ma div image
         if (userFile == '' || userTitle == '' || userCategory == ''){
             alert("Veuillez remplir tout les champs")
         }

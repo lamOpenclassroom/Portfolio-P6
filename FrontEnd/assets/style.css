@@ -309,6 +309,8 @@ li:hover {
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
+
+
 #contact label,
 #login label,
 #add-img label {
@@ -380,13 +382,27 @@ footer nav ul {
 	margin-top: 60px;
 	font-size: 1.62rem;
 }
+/*les icônes de retour et fermeture*/
+.modal-close .fa-xmark, 
+.add-img_close, .fa-xmark{
+	font-size: 1.5rem;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    cursor: pointer;
+}
 
-.modal-close,
-.add-img_close {
+#add-img .fa-arrow-left {
+	font-size: 1.5rem;
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	left: 20px;
+	top: 30px;
 	cursor: pointer;
+}
+
+.fa-sharp{
+	color:#CBD6DC;
+	margin-top: 28px;
 }
 
 .show {
@@ -437,6 +453,9 @@ figure {
 }
 
 /*Formulaire d'ajout image*/
+#add-img #ajout-photo{
+	margin-top: 10px;
+}
 #add-img form {
 	border-bottom: 2px solid #B3B3B3;
 	padding-bottom: 47px;
@@ -459,7 +478,7 @@ figure {
 /*upload image*/
 .img {
 	width: 420px;
-	height: 169px;
+	height: auto;
 	background-color: #E8F1F7;
 	border-radius: 3px;
 	display: flex;
@@ -467,12 +486,6 @@ figure {
 	align-items: center;
 	justify-content: flex-start;
 	justify-content: flex-end;
-}
-
-.fa-regular {
-	position: absolute;
-	left: 10px;
-	top: 10px;
 }
 
 .affiche-bloc {
@@ -485,12 +498,12 @@ figure {
 }
 
 .file {
-	border: 1px black solid;
-	border-radius: 15px;
+	border-radius: 50px;
 	padding: 10px;
 	background-color: #CBD6DC;
 	font-weight: 500;
 	color: #306685;
+	margin-top: 2px;
 }
 
 .img p {
