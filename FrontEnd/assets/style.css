@@ -453,6 +453,11 @@ figure {
 }
 
 /*Formulaire d'ajout image*/
+#image {
+    position: absolute;
+    max-width: 131px;
+}
+
 #add-img #ajout-photo{
 	margin-top: 10px;
 }

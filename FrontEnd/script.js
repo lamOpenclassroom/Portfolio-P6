@@ -6,36 +6,36 @@ const urlDataCat = "http://localhost:5678/api/categories";
 btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`)
 const btnTous = document.querySelector("#tous");
 
-async function loadData(url){
+async function loadData(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
             displayData(data);
             boucleFor(data);
             sessionStorage.setItem('data', JSON.stringify(data))
-            galleryModal(data); 
-            deleteImage(data);  
-            clicAddImg(data); 
+            galleryModal(data);
+            deleteImage(data);
+            clicAddImg(data);
         })
 };
 loadData(urlData);
 //Affichage des datas
-function boucleFor(data){  
-    for (item of data){
+function boucleFor(data) {
+    for (item of data) {
         gallery.insertAdjacentHTML("afterbegin", `<figure>
         <img src="${item.imageUrl}" alt="${item.title}" class="image">
         <figcaption class="title">${item.title}</figcaption>
-        </figure>`); 
-    } 
+        </figure>`);
+    }
 }
 
-function displayData(data, idCat = 0){
+function displayData(data, idCat = 0) {
     document.querySelector(".gallery").innerHTML = "";
-    btnTous.addEventListener("click",()=>{
+    btnTous.addEventListener("click", () => {
         document.querySelector(".gallery").innerHTML = "";
         boucleFor(data);
     })
-    
+
     for (item of data) {
         if (item.categoryId == idCat) {
             gallery.insertAdjacentHTML("afterbegin", `<figure>
@@ -46,7 +46,7 @@ function displayData(data, idCat = 0){
     }
 }
 //Télecharge data boutons Categorie
-async function loadDataCat(url){
+async function loadDataCat(url) {
     fetch(url)
         .then(response => response.json())
         .then(dataCat => {
@@ -56,12 +56,12 @@ async function loadDataCat(url){
 }
 loadDataCat(urlDataCat);
 //Récup data catégorie + affiche les boutons
-function displayDataCat (dataCat){
+function displayDataCat(dataCat) {
     for (let item of dataCat) {
         let btn = `<button id="${item.id}" name="${item.name}">${item.name}</button>`;
         btnFiltre.insertAdjacentHTML("beforeend", btn);
     }
-    
+
     const buttons = document.querySelectorAll("#portfolio button");
     for (let button of buttons) {
         button.addEventListener("click", (e) => {
@@ -94,7 +94,7 @@ body.insertAdjacentHTML('afterbegin',
 </div>
 </div>`);
 
-function galleryModal (data){
+function galleryModal(data) {
     const galleryMod = document.querySelector(".gallery-modal");
     for (let i = 0; i < data.length; i++) {
         galleryMod.insertAdjacentHTML("beforeend", `<figure>
@@ -119,8 +119,9 @@ formAddImag.insertAdjacentHTML('beforeend',
     <div class="img">
         <i class="fa-sharp fa-regular fa-image fa-4x" ></i>
         <label for="file" class="file" id="ajout-photo"> + Ajouter photo</label>
-        <input accept=".png" type="file" name="file" id="file">
+        <input src="*/assets" accept=".png" type="file" name="file" id="file" onchange="previewPicture(this)" required>
         <p>jpg, png : 4mo max</p>
+        <img src="#" alt="" id="image">
     </div>
 	<label for="title">Titre</label>
 	<input type="text" name="title" id="title">
@@ -135,6 +136,32 @@ formAddImag.insertAdjacentHTML('beforeend',
 </form>
         
 </div>`);
+
+//------------------------------------------prévisualisé l'image---------------------------------------------
+var image = document.getElementById("image");
+
+let previewPicture = function (e) {
+
+    // e.files contient un objet FileList
+    const [file] = e.files
+
+    // file est un objet File
+    if (file) {
+
+        // L'objet FileReader
+        let reader = new FileReader();
+
+        // L'événement déclenché lorsque je choisis ma photo
+        reader.onload = function (e) {
+            // je change l'URL de l'image
+            image.src = e.target.result
+        }
+
+        // Je lis le fichier uploadé
+        reader.readAsDataURL(file);
+
+    }
+}
 
 //------------------------------------------Ouverture de la modale----------------------------------------------------
 function buttonModalHandler() {
@@ -185,25 +212,24 @@ function buttonModalHandler() {
 
 function deleteImage() {
     const figures = document.querySelectorAll(".gallery-modal figure");
-    for (figure of figures){
+    for (figure of figures) {
         figure.addEventListener("click", (e) => {
             e.preventDefault();
             const id = e.target;
             let idFigure = id.getAttribute("id");
             alertDelete(idFigure);
-    })
+        })
     }
 }
-  
 
 
-async function alertDelete(idFigure=0) {
+
+async function alertDelete(idFigure = 0) {
     let id = idFigure;
     //On stock le token dans le localStorage
-    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MTAzMjQxMSwiZXhwIjoxNjgxMTE4ODExfQ.J4icT0wdDWkKUi8IZq0P4cFFOB0d6xgRf18QCb3dDLM");
+    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MTE1NDk0MCwiZXhwIjoxNjgxMjQxMzQwfQ.HqNmmJsXesc9NUYSFVLwhutAl-vZWJg2XA_PZQhJxYY");
     //On récupère le token dans le localStorage
     let token = localStorage.getItem("token");
-
     await fetch(`http://localhost:5678/api/works/${id}`, {
         method: 'DELETE',
         body: id,
@@ -231,31 +257,32 @@ function clicAddImg() {
         const userTitle = document.getElementById("title").value;
         const userCategory = document.getElementById("category").value;
         //quand je submit le formulaire il faut l'afficher dans ma div image
-        if (userFile == '' || userTitle == '' || userCategory == ''){
+        if (userFile == '' || userTitle == '' || userCategory == '') {
             alert("Veuillez remplir tout les champs")
         }
 
         const formData = new FormData();
-        formData.append("image",userFile);
-        formData.append("title",userTitle);
-        formData.append("category",userCategory);
-        
-        await fetch("http://localhost:5678/api/works",{
+        formData.append("image", userFile);
+        formData.append("title", userTitle);
+        formData.append("category", userCategory);
+
+        await fetch("http://localhost:5678/api/works", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
             },
             body: formData,
         })
-        .then(resp => {console.table(resp)
-        if (resp.ok == false) {
-            console.log("la requête est en erreur");
-        } else {
-            console.log(resp.json())
-            alert("le formulaire est correctement envoyé")
-        }
-        })
-})
+            .then(resp => {
+                console.table(resp)
+                if (resp.ok == false) {
+                    console.log("la requête est en erreur");
+                } else {
+                    console.log(resp.json())
+                    alert("le formulaire est correctement envoyé")
+                }
+            })
+    })
 }
 
 
