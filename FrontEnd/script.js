@@ -118,7 +118,7 @@ formAddImag.insertAdjacentHTML('beforeend',
 <form class="formAddPhoto">
     <div class="img">
         <i class="fa-sharp fa-regular fa-image fa-4x" ></i>
-        <label for="file" class="file" id="ajout-photo"> + Ajouter photo</label>
+        <label for="file" class="file add-color-grey" id="ajout-photo"> + Ajouter photo</label>
         <input src="*/assets" accept=".png" type="file" name="file" id="file" onchange="previewPicture(this)" required>
         <p>jpg, png : 4mo max</p>
         <img src="#" alt="" id="image">
@@ -144,10 +144,12 @@ let previewPicture = function (e) {
 
     // e.files contient un objet FileList
     const [file] = e.files
-
+    let uploadFile = document.querySelector("#ajout-photo")
+    console.log = (uploadFile)
     // file est un objet File
     if (file) {
-
+        //retirer le bouton ajouter photo
+        uploadFile.classList.remove("add-color-grey");
         // L'objet FileReader
         let reader = new FileReader();
 
@@ -159,7 +161,6 @@ let previewPicture = function (e) {
 
         // Je lis le fichier uploadé
         reader.readAsDataURL(file);
-
     }
 }
 
