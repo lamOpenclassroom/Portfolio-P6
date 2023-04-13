@@ -1,10 +1,13 @@
 const gallery = document.querySelector(".gallery");
 gallery.insertAdjacentHTML("beforebegin", `<div class="btn-filtre"></div>`);
 const btnFiltre = document.querySelector(".btn-filtre");
+btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`);
 const urlData = "http://localhost:5678/api/works";
 const urlDataCat = "http://localhost:5678/api/categories";
-btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`)
 const btnTous = document.querySelector("#tous");
+
+
+
 
 async function loadData(url) {
     fetch(url)
@@ -50,11 +53,12 @@ async function loadDataCat(url) {
     fetch(url)
         .then(response => response.json())
         .then(dataCat => {
-            //console.table(dataCat);
             displayDataCat(dataCat);
+            cat(dataCat);
         });
 }
 loadDataCat(urlDataCat);
+
 //Récup data catégorie + affiche les boutons
 function displayDataCat(dataCat) {
     for (let item of dataCat) {
@@ -73,6 +77,7 @@ function displayDataCat(dataCat) {
         });
     }
 }
+
 
 //----------------------------------Modale--------------------------------------------------------------------
 //Affichage du lien modifier
@@ -97,10 +102,10 @@ body.insertAdjacentHTML('afterbegin',
 function galleryModal(data) {
     const galleryMod = document.querySelector(".gallery-modal");
     for (let i = 0; i < data.length; i++) {
-        galleryMod.insertAdjacentHTML("beforeend", `<figure>
+        galleryMod.insertAdjacentHTML("beforeend", `<figure><div class="icon"><i class="fa-solid fa-trash-can"></i></div>
         <img src="${data[i].imageUrl}" alt="${data[i].title}" id="${data[i].id}" class="image" height="140px" width="100%">
         <figcaption class="title">éditer</figcaption>
-        <div class="icon"><i class="fa-solid fa-trash-can"></i></div></figure>`);
+        </figure>`);
     }
 }
 
@@ -127,28 +132,32 @@ formAddImag.insertAdjacentHTML('beforeend',
 	<input type="text" name="title" id="title">
 	<label for="category">Catégorie</label>
 	<select type="number" name="category" id="category">
-    <option value="">Choose a category</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
+    <option>Choose a category</option>
     </select>
     <input type="submit" id="addPhoto" value="Valider">
 </form>
         
 </div>`);
 
+//Récupération des catégories
+function cat(dataCat){
+    dataCat.forEach(element => {
+        const selectOption = document.querySelector("#category");
+        selectOption.insertAdjacentHTML("beforeend",`<option value = "${element.id}">${element.name}</option>`)
+    });
+};
+
 //------------------------------------------prévisualisé l'image---------------------------------------------
 var image = document.getElementById("image");
 
-let previewPicture = function (e) {
+function  previewPicture(e) {
 
     // e.files contient un objet FileList
     const [file] = e.files
     let uploadFile = document.querySelector("#ajout-photo")
-    console.log = (uploadFile)
     // file est un objet File
     if (file) {
-        //retirer le bouton ajouter photo
+        //cacher le bouton ajouter photo
         uploadFile.classList.remove("add-color-grey");
         // L'objet FileReader
         let reader = new FileReader();
@@ -212,23 +221,20 @@ function buttonModalHandler() {
 //--------------------------------------Supprimer des éléments du DOM------------------
 
 function deleteImage() {
-    const figures = document.querySelectorAll(".gallery-modal figure");
+    const figures = document.querySelectorAll(".gallery-modal figure .icon");
     for (figure of figures) {
-        figure.addEventListener("click", (e) => {
+            figure.addEventListener("click", (e) => { 
             e.preventDefault();
-            const id = e.target;
-            let idFigure = id.getAttribute("id");
+            const parentFigure = e.target.parentElement.parentNode;
+            const childFigure = parentFigure.childNodes[2];
+            let idFigure = childFigure.getAttribute("id");
             alertDelete(idFigure);
         })
     }
 }
 
-
-
 async function alertDelete(idFigure = 0) {
     let id = idFigure;
-    //On stock le token dans le localStorage
-    localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MTE1NDk0MCwiZXhwIjoxNjgxMjQxMzQwfQ.HqNmmJsXesc9NUYSFVLwhutAl-vZWJg2XA_PZQhJxYY");
     //On récupère le token dans le localStorage
     let token = localStorage.getItem("token");
     await fetch(`http://localhost:5678/api/works/${id}`, {
@@ -257,9 +263,11 @@ function clicAddImg() {
         const userFile = document.getElementById("file").files[0];
         const userTitle = document.getElementById("title").value;
         const userCategory = document.getElementById("category").value;
-        //quand je submit le formulaire il faut l'afficher dans ma div image
+        const erreurChamps = document.querySelector("#add-img h3");
+                
         if (userFile == '' || userTitle == '' || userCategory == '') {
-            alert("Veuillez remplir tout les champs")
+            erreurChamps.insertAdjacentHTML("afterend",`<p style="color:red;" id="erreur-champs"></p>`);
+            document.getElementById("erreur-champs").innerHTML = "Veuillez remplir tout les champs";
         }
 
         const formData = new FormData();
@@ -285,5 +293,3 @@ function clicAddImg() {
             })
     })
 }
-
-
