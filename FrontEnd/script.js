@@ -1,25 +1,26 @@
 const gallery = document.querySelector(".gallery");
 gallery.insertAdjacentHTML("beforebegin", `<div class="btn-filtre"></div>`);
 const btnFiltre = document.querySelector(".btn-filtre");
-btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`);
 const urlData = "http://localhost:5678/api/works";
 const urlDataCat = "http://localhost:5678/api/categories";
-const btnTous = document.querySelector("#tous");
-
-
-
+function AddBtnAll(){
+btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`);
+}
 
 async function loadData(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            displayData(data);
+            AddBtnAll();
+            displayData(data);   
             boucleFor(data);
-            sessionStorage.setItem('data', JSON.stringify(data))
+            sessionStorage.setItem('data', JSON.stringify(data));
             galleryModal(data);
+            buttonModalHandler();
             deleteImage(data);
             clicAddImg(data);
         })
+        
 };
 loadData(urlData);
 //Affichage des datas
@@ -33,12 +34,13 @@ function boucleFor(data) {
 }
 
 function displayData(data, idCat = 0) {
+    const btnTous = document.querySelector("#tous");
     document.querySelector(".gallery").innerHTML = "";
     btnTous.addEventListener("click", () => {
         document.querySelector(".gallery").innerHTML = "";
         boucleFor(data);
     })
-
+    
     for (item of data) {
         if (item.categoryId == idCat) {
             gallery.insertAdjacentHTML("afterbegin", `<figure>
@@ -80,10 +82,11 @@ function displayDataCat(dataCat) {
 
 
 //----------------------------------Modale--------------------------------------------------------------------
+function displayModale(){
 //Affichage du lien modifier
 const titleMesProjets = document.querySelector("#portfolio h2");
 titleMesProjets.insertAdjacentHTML('beforeend', `<a href="#" role="button" id="open-modal">modifier</a>`);
-
+}
 //--------------------------------------Affichage de la modale--------------------------------------------------
 const body = document.querySelector("body");
 body.insertAdjacentHTML('afterbegin',
@@ -174,7 +177,8 @@ function  previewPicture(e) {
 }
 
 //------------------------------------------Ouverture de la modale----------------------------------------------------
-function buttonModalHandler() {
+function buttonModalHandler(){
+    displayModale();
     const btn = document.querySelector("#open-modal");
     const contentModal = document.querySelector(".modal-content")
     btn.addEventListener("click", function (e) {
@@ -216,7 +220,9 @@ function buttonModalHandler() {
             e.stopPropagation();
         })
     })
-} buttonModalHandler();
+}
+
+
 
 //--------------------------------------Supprimer des éléments du DOM------------------
 
@@ -229,7 +235,7 @@ function deleteImage() {
             const childFigure = parentFigure.childNodes[2];
             let idFigure = childFigure.getAttribute("id");
             alertDelete(idFigure);
-        })
+        });
     }
 }
 
@@ -246,8 +252,14 @@ async function alertDelete(idFigure = 0) {
         },
     })
         .then((res) => {
-            res.json()
-            console.log(res.status)
+            if (res.ok == false) {
+                alert("Suppression non valide !!");
+            } else {
+                alert("Suppression validé");
+                location.reload();
+                return res.json(); 
+            }
+            
         })
         .then((json) => console.log("la ressource est bien supprimé"))
         .catch((json) => console.log("il y a erreur"))
@@ -285,10 +297,11 @@ function clicAddImg() {
             .then(resp => {
                 console.table(resp)
                 if (resp.ok == false) {
-                    console.log("la requête est en erreur");
+                    alert("Veuillez saisir tout les champs");
                 } else {
                     console.log(resp.json())
                     alert("le formulaire est correctement envoyé")
+                    location.reload();
                 }
             })
     })

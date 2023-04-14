@@ -33,7 +33,7 @@ function listenerConnexion() {
         .then((data)=>{
             //On stock le token dans le localStorage
             localStorage.setItem("token", data.token);
-            window.location.replace("http://127.0.0.1:5500/FrontEnd/index.html");
+            window.location.replace("./index.html");
         })
 
     })
