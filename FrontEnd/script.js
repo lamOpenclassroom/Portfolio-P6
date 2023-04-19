@@ -3,6 +3,7 @@ gallery.insertAdjacentHTML("beforebegin", `<div class="btn-filtre"></div>`);
 const btnFiltre = document.querySelector(".btn-filtre");
 const urlData = "http://localhost:5678/api/works";
 const urlDataCat = "http://localhost:5678/api/categories";
+
 //Ajout du bouton Tous
 function AddBtnAll() {
     btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`);
@@ -55,7 +56,6 @@ async function reloadAddModal(url) {
         })
 }
 
-
 //Affichage des datas
 function boucleFor(data) {
     document.querySelector(".gallery").innerHTML = "";
@@ -68,12 +68,17 @@ function boucleFor(data) {
 }
 
 function displayData(data, idCat = 0) {
-    const btnTous = document.querySelector("#tous");
-    document.querySelector(".gallery").innerHTML = "";
+    const btnTous = document.querySelector("#tous"); 
     btnTous.addEventListener("click", () => {
-        boucleFor(data);
-    })
-   
+        boucleFor(data); 
+    });
+    
+    if(idCat > 0){
+        document.querySelector(".gallery").innerHTML = "";
+        console.log(idCat)
+    }
+    
+    
     for (item of data) {
         if (item.categoryId == idCat) {
             gallery.insertAdjacentHTML("afterbegin", `<figure>
@@ -84,6 +89,7 @@ function displayData(data, idCat = 0) {
     }
     
 }
+
 
 //Télecharge data boutons Categorie
 async function loadDataCat(url) {
@@ -118,9 +124,14 @@ function displayDataCat(dataCat) {
 
 //----------------------------------Modale--------------------------------------------------------------------
 function displayModale() {
-    //Affichage du lien modifier
+    //Affichage du lien modifier lorsqu'on est connecté
     const titleMesProjets = document.querySelector("#portfolio h2");
     titleMesProjets.insertAdjacentHTML('beforeend', `<a href="#" role="button" id="open-modal">modifier</a>`);
+
+    const token = localStorage.getItem("token");
+    if (token == null || token == "") {
+        document.getElementById("open-modal").style.display = "none";
+    }
 }
 //--------------------------------------Affichage de la modale--------------------------------------------------
 const body = document.querySelector("body");
@@ -171,13 +182,13 @@ formAddImag.insertAdjacentHTML('beforeend',
 	<input type="text" name="title" id="title">
 	<label for="category">Catégorie</label>
 	<select type="number" name="category" id="category">
-    <option>Choose a category</option>
+    <option value="">Choose a category</option>
     </select>
     <input type="submit" id="addPhoto" value="Valider">
 </form>
 </div>`);
 const borderTopBtn = document.querySelector(".formAddPhoto #addPhoto");
-borderTopBtn.insertAdjacentHTML("beforebegin",`<p style="border: 1px solid #B3B3B3; margin-top: 47px;"></p>`);
+borderTopBtn.insertAdjacentHTML("beforebegin", `<p style="border: 1px solid #B3B3B3; margin-top: 47px;"></p>`);
 
 const erreurChamps = document.querySelector("#modal-content_add-img h3");
 erreurChamps.insertAdjacentHTML("afterend", `<p style="color:red;" class="erreur-champs"></p>`);
@@ -221,7 +232,7 @@ function previewPicture(e) {
 //------------------------------------------Ouverture de la modale----------------------------------------------------
 function buttonModalHandler() {
     displayModale();
-    const btn = document.querySelector("#open-modal"); 
+    const btn = document.querySelector("#open-modal");
     const contentModal = document.querySelector(".modal-content #modal-content_add-img");
     const ModalFirstChild = document.querySelector("#modal-content_first_enfant")
     btn.addEventListener("click", function (e) {
@@ -243,7 +254,7 @@ function buttonModalHandler() {
     modal.children[0].addEventListener("click", (e) => {
         e.stopPropagation();
     })
-    
+
     //fermeture de la fenêtre add img uniquement
     const closeAddImg = document.querySelector(".add-img_close");
     closeAddImg.addEventListener("click", () => {
@@ -256,7 +267,7 @@ function buttonModalHandler() {
         contentModal.classList.add("affichageCacher");
         ModalFirstChild.classList.remove("affichageCacher");
     })
-    
+
     //Ouverture fenêtre ajout photo
     const openWindowAddImg = document.querySelector("#add")
     openWindowAddImg.addEventListener("click", () => {
@@ -314,9 +325,9 @@ function clicAddImg() {
         e.preventDefault();
         erreur.innerHTML = "";
         let token = localStorage.getItem("token");
-        const userFile = document.getElementById("file").files[0];
-        const userTitle = document.getElementById("title").value;
-        const userCategory = document.getElementById("category").value;
+        let userFile = document.getElementById("file").files[0];
+        let userTitle = document.getElementById("title").value;
+        let userCategory = document.getElementById("category").value;
 
         const formData = new FormData();
         formData.append("image", userFile);
@@ -330,18 +341,27 @@ function clicAddImg() {
             },
             body: formData,
         })
-        .then(resp => {
-            console.table(resp)
-            if (resp.ok == false) {
-                erreur.innerHTML = "Veuillez remplir tout les champs";
-            } else {
-                erreur.classList.remove("erreur-champs");
-                valide.innerHTML = "le formulaire est correctement envoyé";
-                reloadAddModal(urlData);
-            }
-        })
-        .then(json => console.log("la ressource est bien ajoutée"))
-        .catch((error) => console.log(error))
+            .then(resp => {
+                console.table(resp)
+                if (resp.ok == false) {
+                    erreur.innerHTML = "Veuillez remplir tout les champs";
+                    valide.innerHTML = "";
+                } else {
+                    erreur.classList.remove("erreur-champs");
+                    valide.innerHTML = "le formulaire est correctement envoyé";
+                    reloadAddModal(urlData);
+                    document.getElementById("title").value = "";
+                    document.getElementById("category").value = "";
+                    let userFileReset = document.getElementById("file")
+                    userFileReset.files = null;
+                    let resetImage = document.getElementById("image");
+                    resetImage.src = "";
+                    let uploadFileVisible = document.querySelector("#ajout-photo");
+                    uploadFileVisible.classList.add("add-color-grey");
+                }
+            })
+            .then(json => console.log("la ressource est bien ajoutée"))
+            .catch((error) => console.log(error))
     })
 }
 
