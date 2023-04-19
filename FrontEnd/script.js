@@ -3,8 +3,9 @@ gallery.insertAdjacentHTML("beforebegin", `<div class="btn-filtre"></div>`);
 const btnFiltre = document.querySelector(".btn-filtre");
 const urlData = "http://localhost:5678/api/works";
 const urlDataCat = "http://localhost:5678/api/categories";
-function AddBtnAll(){
-btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`);
+//Ajout du bouton Tous
+function AddBtnAll() {
+    btnFiltre.insertAdjacentHTML("afterbegin", `<button id="tous" name="Tous">Tous</button>`);
 }
 
 async function loadData(url) {
@@ -12,19 +13,52 @@ async function loadData(url) {
         .then(response => response.json())
         .then(data => {
             AddBtnAll();
-            displayData(data);   
+            displayData(data);
             boucleFor(data);
             sessionStorage.setItem('data', JSON.stringify(data));
             galleryModal(data);
             buttonModalHandler();
-            deleteImage(data);
             clicAddImg(data);
+            deleteImage(data);
         })
-        
 };
 loadData(urlData);
+
+//Reload la modale et la page d'accueil au moment de la suppression
+function reloadDeleteModal(url) {
+    const galleryMod = document.querySelector(".gallery-modal");
+    const gallery = document.querySelector(".gallery");
+    galleryMod.innerHTML = "";
+    gallery.innerHTML = "";
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            galleryModal(data);
+            boucleFor(data);
+            sessionStorage.setItem('data', JSON.stringify(data));
+            deleteImage(data);
+        })
+}
+//reload au moment de l'ajout
+async function reloadAddModal(url) {
+    const galleryMod = document.querySelector(".gallery-modal");
+    const gallery = document.querySelector(".gallery");
+    galleryMod.innerHTML = "";
+    gallery.innerHTML = "";
+    fetch(url)
+        .then(resp => resp.json())
+        .then(data => {
+            boucleFor(data);
+            sessionStorage.setItem('data', JSON.stringify(data));
+            galleryModal(data);
+            deleteImage(data);
+        })
+}
+
+
 //Affichage des datas
 function boucleFor(data) {
+    document.querySelector(".gallery").innerHTML = "";
     for (item of data) {
         gallery.insertAdjacentHTML("afterbegin", `<figure>
         <img src="${item.imageUrl}" alt="${item.title}" class="image">
@@ -37,10 +71,9 @@ function displayData(data, idCat = 0) {
     const btnTous = document.querySelector("#tous");
     document.querySelector(".gallery").innerHTML = "";
     btnTous.addEventListener("click", () => {
-        document.querySelector(".gallery").innerHTML = "";
         boucleFor(data);
     })
-    
+   
     for (item of data) {
         if (item.categoryId == idCat) {
             gallery.insertAdjacentHTML("afterbegin", `<figure>
@@ -49,7 +82,9 @@ function displayData(data, idCat = 0) {
             </figure>`);
         }
     }
+    
 }
+
 //Télecharge data boutons Categorie
 async function loadDataCat(url) {
     fetch(url)
@@ -82,23 +117,25 @@ function displayDataCat(dataCat) {
 
 
 //----------------------------------Modale--------------------------------------------------------------------
-function displayModale(){
-//Affichage du lien modifier
-const titleMesProjets = document.querySelector("#portfolio h2");
-titleMesProjets.insertAdjacentHTML('beforeend', `<a href="#" role="button" id="open-modal">modifier</a>`);
+function displayModale() {
+    //Affichage du lien modifier
+    const titleMesProjets = document.querySelector("#portfolio h2");
+    titleMesProjets.insertAdjacentHTML('beforeend', `<a href="#" role="button" id="open-modal">modifier</a>`);
 }
 //--------------------------------------Affichage de la modale--------------------------------------------------
 const body = document.querySelector("body");
 body.insertAdjacentHTML('afterbegin',
     `<div class="modal" id="modal" role="dialog">
 <div class="modal-content affiche-bloc">
-    <div class="modal-close">
-    <i class="fa-solid fa-xmark"></i>
+    <div id="modal-content_first_enfant">
+        <div class="modal-close">
+        <i class="fa-solid fa-xmark"></i>
+        </div>
+        <h3>Galerie photo</h3>
+        <div class="gallery-modal"></div>
+        <input type="submit" id="add" value="Ajouter une photo"></input>
+        <a href="#" role="button" id="delete">supprimer la galerie</a>
     </div>
-    <h3>Galerie photo</h3>
-    <div class="gallery-modal"></div>
-    <input type="submit" id="add" value="Ajouter une photo"></input>
-    <a href="#" role="button" id="delete">supprimer la galerie</a>
 </div>
 </div>`);
 
@@ -113,10 +150,9 @@ function galleryModal(data) {
 }
 
 //-------------------------------------Affichage fenêtre ajout photo--------------------------------------------------
-
-const formAddImag = document.querySelector("#modal");
+const formAddImag = document.querySelector(".modal-content");
 formAddImag.insertAdjacentHTML('beforeend',
-    `<div id="add-img">
+    `<div id="modal-content_add-img" class="affichageCacher">
 <i class="fa-solid fa-arrow-left"></i>
 <div class="add-img_close">
 <i class="fa-solid fa-xmark"></i>
@@ -139,21 +175,28 @@ formAddImag.insertAdjacentHTML('beforeend',
     </select>
     <input type="submit" id="addPhoto" value="Valider">
 </form>
-        
 </div>`);
+const borderTopBtn = document.querySelector(".formAddPhoto #addPhoto");
+borderTopBtn.insertAdjacentHTML("beforebegin",`<p style="border: 1px solid #B3B3B3; margin-top: 47px;"></p>`);
+
+const erreurChamps = document.querySelector("#modal-content_add-img h3");
+erreurChamps.insertAdjacentHTML("afterend", `<p style="color:red;" class="erreur-champs"></p>`);
+erreurChamps.insertAdjacentHTML("afterend", `<p style="color:green;" class="champs-valid"></p>`);
+const erreur = document.querySelector(".erreur-champs");
+const valide = document.querySelector(".champs-valid");
 
 //Récupération des catégories
-function cat(dataCat){
+function cat(dataCat) {
     dataCat.forEach(element => {
         const selectOption = document.querySelector("#category");
-        selectOption.insertAdjacentHTML("beforeend",`<option value = "${element.id}">${element.name}</option>`)
+        selectOption.insertAdjacentHTML("beforeend", `<option value = "${element.id}">${element.name}</option>`)
     });
 };
 
 //------------------------------------------prévisualisé l'image---------------------------------------------
 var image = document.getElementById("image");
 
-function  previewPicture(e) {
+function previewPicture(e) {
 
     // e.files contient un objet FileList
     const [file] = e.files
@@ -164,23 +207,23 @@ function  previewPicture(e) {
         uploadFile.classList.remove("add-color-grey");
         // L'objet FileReader
         let reader = new FileReader();
-
         // L'événement déclenché lorsque je choisis ma photo
         reader.onload = function (e) {
             // je change l'URL de l'image
             image.src = e.target.result
         }
-
         // Je lis le fichier uploadé
         reader.readAsDataURL(file);
     }
 }
 
+
 //------------------------------------------Ouverture de la modale----------------------------------------------------
-function buttonModalHandler(){
+function buttonModalHandler() {
     displayModale();
-    const btn = document.querySelector("#open-modal");
-    const contentModal = document.querySelector(".modal-content")
+    const btn = document.querySelector("#open-modal"); 
+    const contentModal = document.querySelector(".modal-content #modal-content_add-img");
+    const ModalFirstChild = document.querySelector("#modal-content_first_enfant")
     btn.addEventListener("click", function (e) {
         e.preventDefault();
         let modal = document.querySelector(".modal");
@@ -200,25 +243,25 @@ function buttonModalHandler(){
     modal.children[0].addEventListener("click", (e) => {
         e.stopPropagation();
     })
-
+    
     //fermeture de la fenêtre add img uniquement
     const closeAddImg = document.querySelector(".add-img_close");
     closeAddImg.addEventListener("click", () => {
-        contentModal.classList.add("affiche-bloc")
+        contentModal.classList.add("affichageCacher");
+        ModalFirstChild.classList.remove("affichageCacher");
     })
     //fleche gauche retour en arrière
     const arrowLeft = document.querySelector(".fa-arrow-left");
     arrowLeft.addEventListener("click", () => {
-        contentModal.classList.add("affiche-bloc")
+        contentModal.classList.add("affichageCacher");
+        ModalFirstChild.classList.remove("affichageCacher");
     })
-
+    
     //Ouverture fenêtre ajout photo
     const openWindowAddImg = document.querySelector("#add")
     openWindowAddImg.addEventListener("click", () => {
-        contentModal.classList.remove("affiche-bloc")
-        modal.children[1].addEventListener("click", (e) => {
-            e.stopPropagation();
-        })
+        contentModal.classList.remove("affichageCacher");
+        ModalFirstChild.classList.add("affichageCacher");
     })
 }
 
@@ -229,7 +272,7 @@ function buttonModalHandler(){
 function deleteImage() {
     const figures = document.querySelectorAll(".gallery-modal figure .icon");
     for (figure of figures) {
-            figure.addEventListener("click", (e) => { 
+        figure.addEventListener("click", (e) => {
             e.preventDefault();
             const parentFigure = e.target.parentElement.parentNode;
             const childFigure = parentFigure.childNodes[2];
@@ -256,14 +299,12 @@ async function alertDelete(idFigure = 0) {
                 alert("Suppression non valide !!");
             } else {
                 alert("Suppression validé");
-                location.reload();
-                return res.json(); 
+                reloadDeleteModal(urlData);
             }
-            
-        })
-        .then((json) => console.log("la ressource est bien supprimé"))
-        .catch((json) => console.log("il y a erreur"))
 
+        })
+        .then(json => console.log("la ressource est bien supprimé"))
+        .catch((error) => console.log(error))
 }
 
 //-------------------------------------Ajout des élément du DOM-------------------------
@@ -271,16 +312,11 @@ async function alertDelete(idFigure = 0) {
 function clicAddImg() {
     document.querySelector(".formAddPhoto").addEventListener("submit", async (e) => {
         e.preventDefault();
+        erreur.innerHTML = "";
         let token = localStorage.getItem("token");
         const userFile = document.getElementById("file").files[0];
         const userTitle = document.getElementById("title").value;
         const userCategory = document.getElementById("category").value;
-        const erreurChamps = document.querySelector("#add-img h3");
-                
-        if (userFile == '' || userTitle == '' || userCategory == '') {
-            erreurChamps.insertAdjacentHTML("afterend",`<p style="color:red;" id="erreur-champs"></p>`);
-            document.getElementById("erreur-champs").innerHTML = "Veuillez remplir tout les champs";
-        }
 
         const formData = new FormData();
         formData.append("image", userFile);
@@ -294,15 +330,18 @@ function clicAddImg() {
             },
             body: formData,
         })
-            .then(resp => {
-                console.table(resp)
-                if (resp.ok == false) {
-                    alert("Veuillez saisir tout les champs");
-                } else {
-                    console.log(resp.json())
-                    alert("le formulaire est correctement envoyé")
-                    location.reload();
-                }
-            })
+        .then(resp => {
+            console.table(resp)
+            if (resp.ok == false) {
+                erreur.innerHTML = "Veuillez remplir tout les champs";
+            } else {
+                erreur.classList.remove("erreur-champs");
+                valide.innerHTML = "le formulaire est correctement envoyé";
+                reloadAddModal(urlData);
+            }
+        })
+        .then(json => console.log("la ressource est bien ajoutée"))
+        .catch((error) => console.log(error))
     })
 }
+

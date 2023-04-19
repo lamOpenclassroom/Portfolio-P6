@@ -275,7 +275,7 @@ li:hover {
 /*lien mdp oublié + cursor connexion*/
 #contact,
 #login,
-#add-img form {
+#modal-content_add-img form{
 	width: 50%;
 	margin: auto;
 }
@@ -292,7 +292,7 @@ li:hover {
 
 #contact form,
 #login form,
-#add-img form {
+#modal-content_add-img form {
 	text-align: left;
 	margin-top: 30px;
 	display: flex;
@@ -301,8 +301,8 @@ li:hover {
 
 #contact input,
 #login input,
-#add-img input,
-#add-img select {
+#modal-content_add-img input,
+#modal-content_add-img select {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
@@ -313,8 +313,10 @@ li:hover {
 
 #contact label,
 #login label,
-#add-img label {
+#modal-content_add-img label {
 	margin: 2em 0 1em 0;
+	font-weight: bolder;
+	font-size: 14px;
 }
 
 #contact textarea {
@@ -365,34 +367,40 @@ footer nav ul {
 	align-items: center;
 }
 
-.modal-content,
-#add-img {
+.modal-content {
 	background-color: #fff;
 	max-width: 630px;
 	margin: auto;
 	position: relative;
-	padding-bottom: 50px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
-.modal-content h3,
-#add-img h3 {
+#modal-content_first_enfant {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#modal-content_first_enfant h3,
+#modal-content_add-img h3 {
 	margin-top: 60px;
 	font-size: 1.62rem;
 }
+
 /*les icônes de retour et fermeture*/
-.modal-close .fa-xmark, 
-.add-img_close, .fa-xmark{
+.modal-close .fa-xmark,
+.add-img_close,
+.fa-xmark {
 	font-size: 1.5rem;
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    cursor: pointer;
+	position: absolute;
+	top: 15px;
+	right: 20px;
+	cursor: pointer;
 }
 
-#add-img .fa-arrow-left {
+#modal-content_add-img .fa-arrow-left {
 	font-size: 1.5rem;
 	position: absolute;
 	left: 20px;
@@ -400,8 +408,8 @@ footer nav ul {
 	cursor: pointer;
 }
 
-.fa-sharp{
-	color:#CBD6DC;
+.fa-sharp {
+	color: #CBD6DC;
 	margin-top: 28px;
 }
 
@@ -415,15 +423,15 @@ footer nav ul {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: flex-start;
-	border-bottom: 2px solid #B3B3B3;
+	border-bottom: 1px solid #B3B3B3;
 }
 
 .gallery-modal figure {
 	padding: 0 7px 11px 0;
 }
 
-.modal-content h3,
-#add-img h3 {
+#modal-content_first_enfant h3,
+#modal-content_add-img h3 {
 	margin-bottom: 46px;
 }
 
@@ -436,6 +444,7 @@ footer nav ul {
 #delete {
 	color: #D65353;
 	text-decoration: none;
+	margin-bottom: 50px
 }
 
 figure {
@@ -454,31 +463,35 @@ figure {
 
 /*Formulaire d'ajout image*/
 #image {
-    position: absolute;
-    width: 131px;
+	position: absolute;
+	width: 131px;
 	height: auto;
 }
 
-#add-img #ajout-photo{
+#modal-content_add-img #ajout-photo {
 	margin-top: 10px;
 }
-#add-img form {
-	border-bottom: 2px solid #B3B3B3;
-	padding-bottom: 47px;
-}
 
-#add-img #add {
+#modal-content_add-img #add {
 	background: #A7A7A7;
-	;
 }
 
-#add-img form {
+input#addPhoto {
+    background: #A7A7A7;
+    height: 37px;
+    width: 237px;
+    cursor: pointer;
+}
+
+#modal-content_add-img form {
 	width: 100%;
 }
 
-#add-img {
-	padding: 70px 110px;
-	position: absolute;
+#modal-content_add-img {
+	padding: 0px 110px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 /*upload image*/
@@ -492,13 +505,14 @@ figure {
 	align-items: center;
 }
 
-.affiche-bloc {
-	z-index: 2;
-}
-
 #file {
 	visibility: hidden;
 	display: none;
+}
+
+.affichageCacher {
+	position: absolute;
+	visibility: hidden;
 }
 
 .file {
@@ -509,14 +523,10 @@ figure {
 	font-weight: bolder;
 }
 
-.add-color-grey{
+.add-color-grey {
 	background-color: #CBD6DC;
 }
 
 .img p {
 	margin-bottom: 20px;
-}
-
-#addPhoto{
-	cursor: pointer;
 }
