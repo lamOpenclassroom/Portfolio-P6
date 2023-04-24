@@ -68,6 +68,7 @@ function boucleFor(data) {
 }
 
 function displayData(data, idCat = 0) {
+    
     const btnTous = document.querySelector("#tous"); 
     btnTous.addEventListener("click", () => {
         boucleFor(data); 
@@ -123,32 +124,69 @@ function displayDataCat(dataCat) {
 
 
 //----------------------------------Modale--------------------------------------------------------------------
-function displayModale() {
-    //Affichage du lien modifier lorsqu'on est connecté
+function connexionDisplayElement() {
     const titleMesProjets = document.querySelector("#portfolio h2");
-    titleMesProjets.insertAdjacentHTML('beforeend', `<a href="#" role="button" id="open-modal">modifier</a>`);
-
+    titleMesProjets.insertAdjacentHTML('afterend', `<div id="icon-modifier"><h2>Mes Projets</h2></div>`);
+    titleMesProjets.classList.add("hidden");
     const token = localStorage.getItem("token");
-    if (token == null || token == "") {
-        document.getElementById("open-modal").style.display = "none";
+    if (token != null) {
+        createElementInterface();
+    }else{
+        console.log("les éléments ne s'afficheront pas")
     }
 }
-//--------------------------------------Affichage de la modale--------------------------------------------------
-const body = document.querySelector("body");
-body.insertAdjacentHTML('afterbegin',
-    `<div class="modal" id="modal" role="dialog">
-<div class="modal-content affiche-bloc">
-    <div id="modal-content_first_enfant">
-        <div class="modal-close">
-        <i class="fa-solid fa-xmark"></i>
+connexionDisplayElement();
+
+
+   
+function createElementInterface(){
+    //---------------------------Affichage du lien modifier----------------------------------------------------
+    const iconModifier = document.querySelector("#icon-modifier");
+    iconModifier.insertAdjacentHTML("beforeend",`<i class="fa-regular fa-pen-to-square"></i><a href="#" role="button" id="open-modal">modifier</a>`);
+    //--------------------------------------Affichage de la modale---------------------------------------------
+    const body = document.querySelector("body");
+    body.insertAdjacentHTML('afterbegin',
+        `<div class="modal" id="modal" role="dialog">
+    <div class="modal-content affiche-bloc">
+        <div id="modal-content_first_enfant">
+            <div class="modal-close">
+            <i class="fa-solid fa-xmark"></i>
+            </div>
+            <h3>Galerie photo</h3>
+            <div class="gallery-modal"></div>
+            <input type="submit" id="add" value="Ajouter une photo"></input>
+            <a href="#" role="button" id="delete">supprimer la galerie</a>
         </div>
-        <h3>Galerie photo</h3>
-        <div class="gallery-modal"></div>
-        <input type="submit" id="add" value="Ajouter une photo"></input>
-        <a href="#" role="button" id="delete">supprimer la galerie</a>
     </div>
-</div>
-</div>`);
+    </div>`);
+    //-------------------------------------Affichage fenêtre ajout photo----------------------------------------
+    const formAddImag = document.querySelector(".modal-content");
+    formAddImag.insertAdjacentHTML('beforeend',
+        `<div id="modal-content_add-img" class="affichageCacher">
+    <i class="fa-solid fa-arrow-left"></i>
+    <div class="add-img_close">
+    <i class="fa-solid fa-xmark"></i>
+    </div>
+    <h3>Ajout photo</h3>
+
+    <form class="formAddPhoto">
+        <div class="img">
+            <i class="fa-sharp fa-regular fa-image fa-4x" ></i>
+            <label for="file" class="file add-color-grey" id="ajout-photo"> + Ajouter photo</label>
+            <input src="*/assets" accept=".png" type="file" name="file" id="file" onchange="previewPicture(this)" required>
+            <p>jpg, png : 4mo max</p>
+            <img src="#" alt="" id="image">
+        </div>
+        <label for="title">Titre</label>
+        <input type="text" name="title" id="title">
+        <label for="category">Catégorie</label>
+        <select type="number" name="category" id="category">
+        <option value="">Choose a category</option>
+        </select>
+        <input type="submit" id="addPhoto" value="Valider">
+    </form>
+    </div>`);
+}
 
 function galleryModal(data) {
     const galleryMod = document.querySelector(".gallery-modal");
@@ -160,33 +198,6 @@ function galleryModal(data) {
     }
 }
 
-//-------------------------------------Affichage fenêtre ajout photo--------------------------------------------------
-const formAddImag = document.querySelector(".modal-content");
-formAddImag.insertAdjacentHTML('beforeend',
-    `<div id="modal-content_add-img" class="affichageCacher">
-<i class="fa-solid fa-arrow-left"></i>
-<div class="add-img_close">
-<i class="fa-solid fa-xmark"></i>
-</div>
-<h3>Ajout photo</h3>
-
-<form class="formAddPhoto">
-    <div class="img">
-        <i class="fa-sharp fa-regular fa-image fa-4x" ></i>
-        <label for="file" class="file add-color-grey" id="ajout-photo"> + Ajouter photo</label>
-        <input src="*/assets" accept=".png" type="file" name="file" id="file" onchange="previewPicture(this)" required>
-        <p>jpg, png : 4mo max</p>
-        <img src="#" alt="" id="image">
-    </div>
-	<label for="title">Titre</label>
-	<input type="text" name="title" id="title">
-	<label for="category">Catégorie</label>
-	<select type="number" name="category" id="category">
-    <option value="">Choose a category</option>
-    </select>
-    <input type="submit" id="addPhoto" value="Valider">
-</form>
-</div>`);
 const borderTopBtn = document.querySelector(".formAddPhoto #addPhoto");
 borderTopBtn.insertAdjacentHTML("beforebegin", `<p style="border: 1px solid #B3B3B3; margin-top: 47px;"></p>`);
 
@@ -231,7 +242,6 @@ function previewPicture(e) {
 
 //------------------------------------------Ouverture de la modale----------------------------------------------------
 function buttonModalHandler() {
-    displayModale();
     const btn = document.querySelector("#open-modal");
     const contentModal = document.querySelector(".modal-content #modal-content_add-img");
     const ModalFirstChild = document.querySelector("#modal-content_first_enfant")
@@ -328,12 +338,12 @@ function clicAddImg() {
         let userFile = document.getElementById("file").files[0];
         let userTitle = document.getElementById("title").value;
         let userCategory = document.getElementById("category").value;
-
+        
         const formData = new FormData();
         formData.append("image", userFile);
         formData.append("title", userTitle);
         formData.append("category", userCategory);
-
+        
         await fetch("http://localhost:5678/api/works", {
             method: "POST",
             headers: {

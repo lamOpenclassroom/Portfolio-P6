@@ -530,3 +530,18 @@ input#addPhoto {
 .img p {
 	margin-bottom: 20px;
 }
+
+div#icon-modifier {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.fa-regular {
+	margin-left: 30px;
+}
+
+.hidden{
+	visibility: hidden;
+	display: none;
+}
