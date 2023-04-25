@@ -545,3 +545,8 @@ div#icon-modifier {
 	visibility: hidden;
 	display: none;
 }
+
+/*--------Login-------*/
+.login{
+	cursor: pointer;
+}

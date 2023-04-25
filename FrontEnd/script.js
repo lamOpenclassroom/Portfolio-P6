@@ -1,3 +1,33 @@
+//-------------------------------------Login------------------------
+const login = document.querySelector("header nav ul").children[2];
+login.classList.add("login");
+
+function clickLogin(){
+    login.addEventListener("click",()=>{
+        window.location.replace("./login.html")  
+    })
+}
+
+function clickLogout(){
+    login.addEventListener("click",()=>{
+        localStorage.removeItem('token');
+        location.reload();
+    })   
+}
+
+function condition(){
+    const token = localStorage.getItem("token");
+    const classLogin = document.querySelector(".login");
+    console.log(classLogin)
+    if (token == null) {
+        clickLogin();
+    }else if ((token != null)){
+        classLogin.innerText = "logout";
+        clickLogout();
+    }  
+}
+condition();
+//------------------------------------------------------------------------------------------------------
 const gallery = document.querySelector(".gallery");
 gallery.insertAdjacentHTML("beforebegin", `<div class="btn-filtre"></div>`);
 const btnFiltre = document.querySelector(".btn-filtre");
@@ -76,7 +106,6 @@ function displayData(data, idCat = 0) {
     
     if(idCat > 0){
         document.querySelector(".gallery").innerHTML = "";
-        console.log(idCat)
     }
     
     
@@ -131,8 +160,6 @@ function connexionDisplayElement() {
     const token = localStorage.getItem("token");
     if (token != null) {
         createElementInterface();
-    }else{
-        console.log("les éléments ne s'afficheront pas")
     }
 }
 connexionDisplayElement();
@@ -173,7 +200,7 @@ function createElementInterface(){
         <div class="img">
             <i class="fa-sharp fa-regular fa-image fa-4x" ></i>
             <label for="file" class="file add-color-grey" id="ajout-photo"> + Ajouter photo</label>
-            <input src="*/assets" accept=".png" type="file" name="file" id="file" onchange="previewPicture(this)" required>
+            <input src="*/assets" accept=".png" type="file" name="file" id="file" onchange="previewPicture(this)">
             <p>jpg, png : 4mo max</p>
             <img src="#" alt="" id="image">
         </div>
@@ -181,7 +208,7 @@ function createElementInterface(){
         <input type="text" name="title" id="title">
         <label for="category">Catégorie</label>
         <select type="number" name="category" id="category">
-        <option value="">Choose a category</option>
+        <option value="">Choisir la catégorie</option>
         </select>
         <input type="submit" id="addPhoto" value="Valider">
     </form>
@@ -322,9 +349,8 @@ async function alertDelete(idFigure = 0) {
                 alert("Suppression validé");
                 reloadDeleteModal(urlData);
             }
-
         })
-        .then(json => console.log("la ressource est bien supprimé"))
+        .then(json => console.log(json))
         .catch((error) => console.log(error))
 }
 
@@ -352,7 +378,6 @@ function clicAddImg() {
             body: formData,
         })
             .then(resp => {
-                console.table(resp)
                 if (resp.ok == false) {
                     erreur.innerHTML = "Veuillez remplir tout les champs";
                     valide.innerHTML = "";
@@ -370,8 +395,9 @@ function clicAddImg() {
                     uploadFileVisible.classList.add("add-color-grey");
                 }
             })
-            .then(json => console.log("la ressource est bien ajoutée"))
+            .then(json => console.log(json))
             .catch((error) => console.log(error))
     })
 }
+
 

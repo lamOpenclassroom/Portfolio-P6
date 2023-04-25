@@ -26,6 +26,7 @@ function listenerConnexion() {
                 document.getElementById("erreur").innerHTML = ("Erreur dans l’identifiant ou le mot de passe");
             } else {
                 document.getElementById("connexion-valid").innerHTML = ("Vous êtes bien connecté");
+                document.getElementById("erreur").innerHTML = "";
                 return resp.json();
             }
             
